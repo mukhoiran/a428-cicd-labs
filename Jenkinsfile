@@ -16,5 +16,20 @@ pipeline {
                 sh './jenkins/scripts/test.sh' 
             }
         }
+        stage('Manual Approval') {
+            steps {
+                input message: 'Lanjutkan ke tahap Deploy?', submitter: 'user', submitterParameter: 'proceed'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                // Langkah-langkah untuk deploy aplikasi React
+                sh './jenkins/scripts/deliver.sh'
+                sh './jenkins/scripts/kill.sh'
+                
+                // Tunggu selama 1 menit sebelum melanjutkan
+                sleep time: 1, unit: 'MINUTES'
+            }
+        }
     }
 }
